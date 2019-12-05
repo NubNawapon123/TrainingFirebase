@@ -27,7 +27,7 @@ class AddMemberActivity : BaseActivity(), AddMemberContract.View {
     private fun initView() {
         btn_add_member?.setOnClickListener {
             presenter.addMemberUser(
-                useId = edt_id?.text?.trim().toString(),
+                userId = edt_id?.text?.trim().toString(),
                 name = edt_name?.text?.trim().toString(),
                 weight = edt_weight?.text?.trim().toString(),
                 height = edt_height?.text?.trim().toString()

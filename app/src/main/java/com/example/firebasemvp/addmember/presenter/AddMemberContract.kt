@@ -6,6 +6,6 @@ class AddMemberContract {
     }
 
     interface Presenter {
-        fun addMemberUser(useId: String?, name: String?, weight: String?, height: String?)
+        fun addMemberUser(userId: String?, name: String?, weight: String?, height: String?)
     }
 }
