@@ -35,7 +35,7 @@ class AddMemberPresenterImpl(private val view: AddMemberContract.View) :
                         sizeList += 1
                     }
                     val map: MutableMap<String, Any> = HashMap()
-                    map["$sizeList"] = UserListModel(useId, name, weight, height)
+                    map["$useId"] = UserListModel(useId, name, weight, height)
                     refUserListChild.updateChildren(map)
                     view.addMemberSuccess()
                 }

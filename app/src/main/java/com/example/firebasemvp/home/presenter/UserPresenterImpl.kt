@@ -38,9 +38,9 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
         refUsersChild.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val value = dataSnapshot.getValue(UserModel::class.java)
+                /*val value = dataSnapshot.getValue(UserShowModel::class.java)
                 val model = UserModel()
-                /*model.email = value?.email
+                model.email = value?.email
                 value?.userList?.map {
                     if (!it?.value.idUser.isNullOrEmpty()) {
                         val modelList = UserListModel().apply {
@@ -54,6 +54,8 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
                 }
                 model?.email = value?.email
                 listUser = model*/
+                val value = dataSnapshot.getValue(UserModel::class.java)
+                val model = UserModel()
                 value?.userList?.map { userListModel ->
                     if (!userListModel?.idUser.isNullOrEmpty()) {
                         model?.userList?.add(userListModel)
@@ -94,16 +96,6 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
                 }
             }
         })
-    }
-
-    private fun calculateBMI(height: String, weight: String): String? {
-        var x = (height.toDouble().times(0.01))
-        var y = weight.toDouble()
-        return (y / (x * x)).toString()
-    }
-
-    private fun mapModelUser(modelUser: UserModel) {
-
     }
 
 }
