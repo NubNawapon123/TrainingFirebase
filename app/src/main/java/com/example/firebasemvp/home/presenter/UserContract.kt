@@ -4,11 +4,12 @@ import com.example.firebasemvp.common.BaseView
 import com.example.firebasemvp.home.model.UserListModel
 import com.example.firebasemvp.home.model.UserModel
 
-class UserContact {
+class UserContract {
     interface Presenter {
 
+        fun addDefaultData()
 
-        fun loadData()
+        fun loadDataFormFirebase()
 
         fun removeItemMember(userId: String)
     }

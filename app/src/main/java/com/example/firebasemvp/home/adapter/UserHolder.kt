@@ -11,6 +11,7 @@ class UserHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var textViewName = itemView.tv_name
     var textViewAge = itemView.tv_age
     var itemUser = itemView.item_user
+    var textViewBmi = itemView.tv_bmi
 
     fun bindData(
         userListModel: UserListModel?,
@@ -19,6 +20,7 @@ class UserHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         textViewName.text = "Name : " + userListModel?.name
         textViewAge.text = "Age: ${userListModel?.idUser} "
+//        textViewBmi.text = "BMI : ${userListModel?.bmi}"
 
         itemUser?.apply {
 

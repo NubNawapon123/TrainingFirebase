@@ -5,7 +5,7 @@ import com.example.firebasemvp.home.model.UserModel
 import com.google.firebase.database.*
 
 
-class UserPresenterImpl(var view: UserContact.View?) : UserContact.Presenter {
+class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
 
     companion object {
         const val KEY_USERS = "users"
@@ -19,44 +19,68 @@ class UserPresenterImpl(var view: UserContact.View?) : UserContact.Presenter {
 
     private var listUser: UserModel? = null
 
-    override fun loadData() {
-        addDataDefault()
-        userListEvent()
-        view?.updateData(listUser ?: UserModel())
-    }
-
-    override fun removeItemMember(userId: String) {
-        val queryIdUser = refUserListChild.orderByChild(KEY_ID_USER).equalTo(userId)
-        queryIdUser.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                dataSnapshot.children.forEach {
-                    it.ref.removeValue()
-                }
-            }
-
-        })
-    }
-
-    private fun addDataDefault() {
+    override fun addDefaultData() {
         val userModel = UserModel().apply {
             email = "nawapon.f@kbtg.tech"
             userList = arrayListOf(
                 UserListModel("1", "nub1", "150", "50"),
-                UserListModel("3", "nub2", "160", "50"),
-                UserListModel("5", "nub3", "170", "50"),
-                UserListModel("7", "nub3", "170", "50"),
-                UserListModel("7", "nub3", "170", "50")
+                UserListModel("3", "nub2", "160", "60"),
+                UserListModel("5", "nub3", "170", "60"),
+                UserListModel("7", "nub3", "170", "65"),
+                UserListModel("7", "nub3", "170", "62")
             )
         }
         listUser = userModel
         refUsersChild.setValue(listUser)
     }
 
-    private fun userListEvent() {
+    override fun loadDataFormFirebase() {
+        refUsersChild.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val value = dataSnapshot.getValue(UserModel::class.java)
+                val model = UserModel()
+                /*model.email = value?.email
+                value?.userList?.map {
+                    if (!it?.value.idUser.isNullOrEmpty()) {
+                        val modelList = UserListModel().apply {
+                            idUser = it?.value?.idUser
+                            name = it?.value?.name
+                            weight = it?.value?.weight
+                            height = it?.value?.height
+                        }
+                        model?.userList?.add(modelList)
+                    }
+                }
+                model?.email = value?.email
+                listUser = model*/
+                value?.userList?.map { userListModel ->
+                    if (!userListModel?.idUser.isNullOrEmpty()) {
+                        model?.userList?.add(userListModel)
+                    }
+                }
+                model?.email = value?.email
+                listUser = model
+                view?.updateData(listUser ?: UserModel())
+            }
+
+        })
+        initEventUserList()
+    }
+
+    override fun removeItemMember(userId: String) {
+        val queryIdUser = refUserListChild.orderByChild(KEY_ID_USER).equalTo(userId)
+        queryIdUser.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                dataSnapshot.children.forEach {
+                    it.ref.removeValue()
+                }
+            }
+        })
+    }
+
+    private fun initEventUserList() {
         refUserListChild.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(dataSnapshot: DatabaseError) {}
             override fun onChildMoved(dataSnapshot: DataSnapshot, value: String?) {}
@@ -69,8 +93,17 @@ class UserPresenterImpl(var view: UserContact.View?) : UserContact.Presenter {
                     view?.updateList(list)
                 }
             }
-
         })
+    }
+
+    private fun calculateBMI(height: String, weight: String): String? {
+        var x = (height.toDouble().times(0.01))
+        var y = weight.toDouble()
+        return (y / (x * x)).toString()
+    }
+
+    private fun mapModelUser(modelUser: UserModel) {
+
     }
 
 }
