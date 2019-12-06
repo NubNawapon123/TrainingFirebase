@@ -5,13 +5,13 @@ import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
-data class UserShowModel(
+data class UserResponseModel(
     var email: String? = "",
-    var userList: Map<String, UserListShowModel> = mapOf()
+    var userList: Map<String, UserListResponseModel> = mapOf()
 ) : Parcelable
 
 @Parcelize
-data class UserListShowModel(
+data class UserListResponseModel(
     var idUser: String? = "",
     var name: String? = "",
     var weight: String? = "",

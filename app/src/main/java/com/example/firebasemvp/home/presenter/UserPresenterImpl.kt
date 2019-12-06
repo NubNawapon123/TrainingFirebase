@@ -2,7 +2,7 @@ package com.example.firebasemvp.home.presenter
 
 import com.example.firebasemvp.home.model.UserListModel
 import com.example.firebasemvp.home.model.UserModel
-import com.example.firebasemvp.home.model.UserShowModel
+import com.example.firebasemvp.home.model.UserResponseModel
 import com.google.firebase.database.*
 
 
@@ -39,7 +39,7 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
         refUsersChild.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val value = dataSnapshot.getValue(UserShowModel::class.java)
+                val value = dataSnapshot.getValue(UserResponseModel::class.java)
                 val model = UserModel()
                 model.email = value?.email
                 value?.userList?.map {
