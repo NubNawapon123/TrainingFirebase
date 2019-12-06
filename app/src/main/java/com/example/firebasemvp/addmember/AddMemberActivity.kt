@@ -1,20 +1,38 @@
 package com.example.firebasemvp.addmember
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import com.example.firebasemvp.R
 import com.example.firebasemvp.addmember.presenter.AddMemberContract
 import com.example.firebasemvp.addmember.presenter.AddMemberPresenterImpl
 import com.example.firebasemvp.common.BaseActivity
+import com.example.firebasemvp.home.model.UserListModel
 import kotlinx.android.synthetic.main.activity_add_member.*
 
 class AddMemberActivity : BaseActivity(), AddMemberContract.View {
 
+    companion object {
+        const val ARGUMENT_EDIT_USER = "edit_user_model"
+
+        @JvmStatic
+        fun getStartIntent(context: Context, editModel: UserListModel?): Intent {
+            return Intent(context, AddMemberActivity::class.java).apply {
+                putExtra(ARGUMENT_EDIT_USER, editModel)
+            }
+        }
+    }
+
+    private var editModel: UserListModel? = null
     private lateinit var presenter: AddMemberPresenterImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_member)
+        intent?.let {
+            editModel = it.extras?.getParcelable<UserListModel>(ARGUMENT_EDIT_USER)
+        }
         presenter = AddMemberPresenterImpl(this@AddMemberActivity)
         initView()
     }
@@ -25,6 +43,21 @@ class AddMemberActivity : BaseActivity(), AddMemberContract.View {
     }
 
     private fun initView() {
+        if (editModel != null) {
+            edt_id?.apply {
+                setText(editModel?.idUser)
+                isEnabled = false
+            }
+            edt_name?.apply {
+                setText(editModel?.name)
+            }
+            edt_weight?.apply {
+                setText(editModel?.weight)
+            }
+            edt_height?.apply {
+                setText(editModel?.height)
+            }
+        }
         btn_add_member?.setOnClickListener {
             presenter.addMemberUser(
                 userId = edt_id?.text?.trim().toString(),

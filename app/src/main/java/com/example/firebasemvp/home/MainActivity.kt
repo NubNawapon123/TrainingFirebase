@@ -42,7 +42,10 @@ class MainActivity : BaseActivity(), UserContract.View {
         tv_email?.text = model.email
         userAdapter = UserAdapter(model.userList, object : UserCallback {
             override fun onSelectItem(userListModel: UserListModel) {
-
+                startActivityForResult(
+                    Intent(AddMemberActivity.getStartIntent(this@MainActivity, userListModel)),
+                    REQUEST_CODE
+                )
             }
 
             override fun onSelectItemLongClick(userListModel: UserListModel) {
