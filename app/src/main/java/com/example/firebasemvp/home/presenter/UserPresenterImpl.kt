@@ -4,6 +4,7 @@ import com.example.firebasemvp.home.model.UserListModel
 import com.example.firebasemvp.home.model.UserModel
 import com.example.firebasemvp.home.model.UserResponseModel
 import com.google.firebase.database.*
+import java.math.BigDecimal
 
 
 class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
@@ -49,27 +50,23 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
                             name = it?.value?.name
                             weight = it?.value?.weight
                             height = it?.value?.height
+                            bmi = calculateBmi(
+                                weight = it?.value?.weight.coverStringToDouble(),
+                                height = it?.value?.height.coverStringToDouble()
+                            )?.substring(IntRange(0, 4))
                         }
                         model?.userList?.add(modelList)
                     }
                 }
                 model?.email = value?.email
                 listUser = model
-                /*val value = dataSnapshot.getValue(UserModel::class.java)
-                val model = UserModel()
-                value?.userList?.map { userListModel ->
-                    if (!userListModel?.idUser.isNullOrEmpty()) {
-                        model?.userList?.add(userListModel)
-                    }
-                }
-                model?.email = value?.email
-                listUser = model*/
                 view?.updateData(listUser ?: UserModel())
             }
 
         })
         initEventUserList()
     }
+
 
     override fun removeItemMember(userId: String) {
         val queryIdUser = refUserListChild.orderByChild(KEY_ID_USER).equalTo(userId)
@@ -91,6 +88,10 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
             override fun onChildAdded(dataSnapshot: DataSnapshot, value: String?) {}
             override fun onChildRemoved(dataSnapshot: DataSnapshot) {
                 val value = dataSnapshot.getValue(UserListModel::class.java)
+                value?.bmi = calculateBmi(
+                    value?.weight.coverStringToDouble(),
+                    value?.height.coverStringToDouble()
+                )?.substring(IntRange(0, 4))
                 listUser?.userList?.remove(value)
                 listUser?.userList?.let { list ->
                     view?.updateList(list)
@@ -99,4 +100,25 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
         })
     }
 
+    private fun calculateBmi(weight: Double, height: Double): String? {
+        val x = weight
+        val y = height * 0.01
+        return (x / (y * y)).toString().formatStringDouble()
+    }
+
+}
+
+fun String?.coverStringToDouble(): Double = (this ?: "0.0").toDouble()
+
+fun String?.formatStringDouble(digit: Int? = 2): String {
+    val format = "%,." + digit + "f"
+    if (!this.isNullOrBlank()) {
+        val value = this!!.replace(",".toRegex(), "")
+        return try {
+            String.format(format, BigDecimal(value))
+        } catch (e: Exception) {
+            value
+        }
+    }
+    return this ?: ""
 }

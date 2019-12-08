@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_age"
+        android:id="@+id/tv_userId"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -38,7 +38,7 @@
         android:text="Hello World!"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_age"
+        app:layout_constraintStart_toEndOf="@+id/tv_userId"
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
     <View

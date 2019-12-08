@@ -41,15 +41,15 @@ class MainActivity : BaseActivity(), UserContract.View {
     override fun updateData(model: UserModel) {
         tv_email?.text = model.email
         userAdapter = UserAdapter(model.userList, object : UserCallback {
-            override fun onSelectItem(userListModel: UserListModel) {
+            override fun onSelectItem(userListModel: UserListModel?) {
                 startActivityForResult(
                     Intent(AddMemberActivity.getStartIntent(this@MainActivity, userListModel)),
                     REQUEST_CODE
                 )
             }
 
-            override fun onSelectItemLongClick(userListModel: UserListModel) {
-                presenter.removeItemMember(userListModel.idUser ?: "")
+            override fun onSelectItemLongClick(userListModel: UserListModel?) {
+                presenter.removeItemMember(userListModel?.idUser ?: "")
             }
         })
 

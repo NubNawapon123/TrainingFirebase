@@ -14,5 +14,6 @@ data class UserListModel(
     var idUser: String? = "",
     var name: String? = "",
     var weight: String? = "",
-    var height: String? = ""
+    var height: String? = "",
+    var bmi: String? = ""
 ) : Parcelable
