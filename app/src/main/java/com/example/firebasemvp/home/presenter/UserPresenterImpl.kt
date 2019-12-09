@@ -13,6 +13,7 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
         const val KEY_USERS = "users"
         const val KEY_USERS_LIST = "userList"
         const val KEY_ID_USER = "idUser"
+        const val KEY_EMAIL = "email"
     }
 
     private var database = FirebaseDatabase.getInstance()
@@ -21,19 +22,10 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
 
     private var listUser: UserModel? = null
 
-    override fun addDefaultData() {
-        val userModel = UserModel().apply {
-            email = "nawapon.f@kbtg.tech"
-            userList = arrayListOf(
-                UserListModel("1", "nub1", "150", "50"),
-                UserListModel("3", "nub2", "160", "60"),
-                UserListModel("5", "nub3", "170", "60"),
-                UserListModel("7", "nub3", "170", "65"),
-                UserListModel("7", "nub3", "170", "62")
-            )
-        }
-        listUser = userModel
-        refUsersChild.setValue(listUser)
+    override fun addDefaultEmail() {
+        val map: MutableMap<String, Any> = HashMap()
+        map[KEY_EMAIL] = "nawapon.fangmuang@gamil.com"
+        refUsersChild.updateChildren(map)
     }
 
     override fun loadDataFormFirebase() {
@@ -44,21 +36,21 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
                 val model = UserModel()
                 model.email = value?.email
                 value?.userList?.map {
-                    if (!it?.value.idUser.isNullOrEmpty()) {
+                    if (!it.value.idUser.isNullOrEmpty()) {
                         val modelList = UserListModel().apply {
-                            idUser = it?.value?.idUser
-                            name = it?.value?.name
-                            weight = it?.value?.weight
-                            height = it?.value?.height
+                            idUser = it.value.idUser
+                            name = it.value.name
+                            weight = it.value.weight
+                            height = it.value.height
                             bmi = calculateBmi(
-                                weight = it?.value?.weight.coverStringToDouble(),
-                                height = it?.value?.height.coverStringToDouble()
+                                weight = it.value.weight.coverStringToDouble(),
+                                height = it.value.height.coverStringToDouble()
                             )?.substring(IntRange(0, 4))
                         }
-                        model?.userList?.add(modelList)
+                        model.userList.add(modelList)
                     }
                 }
-                model?.email = value?.email
+                model.email = value?.email
                 listUser = model
                 view?.updateData(listUser ?: UserModel())
             }
@@ -113,7 +105,7 @@ fun String?.coverStringToDouble(): Double = (this ?: "0.0").toDouble()
 fun String?.formatStringDouble(digit: Int? = 2): String {
     val format = "%,." + digit + "f"
     if (!this.isNullOrBlank()) {
-        val value = this!!.replace(",".toRegex(), "")
+        val value = this.replace(",".toRegex(), "")
         return try {
             String.format(format, BigDecimal(value))
         } catch (e: Exception) {

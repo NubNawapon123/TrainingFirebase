@@ -7,7 +7,7 @@ import com.example.firebasemvp.home.model.UserModel
 class UserContract {
     interface Presenter {
 
-        fun addDefaultData()
+        fun addDefaultEmail()
 
         fun loadDataFormFirebase()
 

@@ -26,6 +26,7 @@ class MainActivity : BaseActivity(), UserContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         presenter = UserPresenterImpl(this@MainActivity)
+        presenter.addDefaultEmail()
         presenter.loadDataFormFirebase()
         initView()
     }
