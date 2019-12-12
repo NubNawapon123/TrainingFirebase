@@ -45,7 +45,7 @@ class UserPresenterImpl(var view: UserContract.View?) : UserContract.Presenter {
                             bmi = calculateBmi(
                                 weight = it.value.weight.coverStringToDouble(),
                                 height = it.value.height.coverStringToDouble()
-                            )?.substring(IntRange(0, 4))
+                            )
                         }
                         model.userList.add(modelList)
                     }
